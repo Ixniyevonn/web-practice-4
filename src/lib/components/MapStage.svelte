@@ -82,10 +82,6 @@
 	let cameraLast = 0;
 	let targetCenter = untrack(() => ({ x: center.x, y: center.y }));
 	let targetZoom = 1;
-	let drawFrame = 0;
-	let drawRenderer: MapLightweightRenderer | null = null;
-	let drawView: { width: number; height: number; panX: number; panY: number; zoom: number } | null =
-		null;
 	const touchPoints = new Map<number, { clientX: number; clientY: number }>();
 	let pinch = $state<{ distance: number; zoom: number; anchor: MapPoint } | null>(null);
 
@@ -165,54 +161,28 @@
 			});
 		return () => {
 			active = false;
-			cancelAnimationFrame(drawFrame);
-			drawFrame = 0;
-			drawRenderer = null;
-			drawView = null;
 			renderer?.destroy();
 			renderer = null;
 		};
 	});
 
 	$effect(() => {
-		if (!renderer || viewportWidth < 2 || viewportHeight < 2) {
-			drawRenderer = null;
-			drawView = null;
-			return;
-		}
+		if (!renderer) return;
 		renderer.setScene(scene);
 		renderer.setFocusedRegion(scene.focusedRegionId ?? null);
 		renderer.setHighlight(highlightId);
-		rendererRevision;
-		drawRenderer = renderer;
-		drawView = {
-			width: viewportWidth,
-			height: viewportHeight,
-			panX: -viewMinX * scale,
-			panY: -viewMinY * scale,
-			zoom: scale
-		};
-		// Keep one pending frame across camera updates. Cancelling the previous
-		// frame on every tween step would make the canvas jump only at the end.
-		if (drawFrame) return;
-		drawFrame = requestAnimationFrame(() => {
-			drawFrame = 0;
-			const currentRenderer = drawRenderer;
-			const currentView = drawView;
-			if (!currentRenderer || !currentView) return;
-			const result = currentRenderer.draw(currentView);
-			if (result.ready) imagePresented = true;
-		});
+		void scene;
+		void highlightId;
+		void rendererRevision;
+		void viewportWidth;
+		void viewportHeight;
+		untrack(() => drawCurrent());
 	});
 
 	$effect(() => {
 		return () => {
 			cancelAnimationFrame(cameraFrame);
 			cameraFrame = 0;
-			cancelAnimationFrame(drawFrame);
-			drawFrame = 0;
-			drawRenderer = null;
-			drawView = null;
 		};
 	});
 
@@ -282,6 +252,19 @@
 	 * The map stays responsive during dragging because every pointer move only
 	 * updates the target; the render loop catches up over a few frames.
 	 */
+	function drawCurrent(): void {
+		const currentRenderer = renderer;
+		if (!currentRenderer || viewportWidth < 2 || viewportHeight < 2) return;
+		const result = currentRenderer.draw({
+			width: viewportWidth,
+			height: viewportHeight,
+			panX: -viewMinX * scale,
+			panY: -viewMinY * scale,
+			zoom: scale
+		});
+		if (result.ready) imagePresented = true;
+	}
+
 	function startCameraEase(): void {
 		if (cameraFrame) return;
 		const reduced =
@@ -290,6 +273,7 @@
 		if (reduced) {
 			center = { ...targetCenter };
 			zoom = targetZoom;
+			drawCurrent();
 			return;
 		}
 		cameraLast = performance.now();
@@ -309,9 +293,11 @@
 			if (settled) {
 				center = { ...targetCenter };
 				zoom = targetZoom;
+				drawCurrent();
 				cameraFrame = 0;
 				return;
 			}
+			drawCurrent();
 			cameraFrame = requestAnimationFrame(step);
 		};
 		cameraFrame = requestAnimationFrame(step);
@@ -699,7 +685,7 @@
 		touch-action: none;
 		cursor: grab;
 		background: #0a0806;
-		isolation: isolate;
+		contain: layout paint;
 	}
 
 	.map-viewport.dragging {
@@ -724,15 +710,7 @@
 	}
 
 	.map-image-bootstrap {
-		position: absolute;
-		inset: 0;
-		display: block;
-		inline-size: auto;
-		block-size: auto;
-		max-width: none;
-		max-height: none;
-		pointer-events: none;
-		visibility: hidden;
+		display: none;
 	}
 
 	.map-image-fallback {
