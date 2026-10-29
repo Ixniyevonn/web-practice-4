@@ -19,9 +19,9 @@
 		property="og:description"
 		content="Интерактивная карта ночлегов Доминиона Флатрия: выберите место, число гостей и ночей, рассчитайте стоимость и сохраните учебную бронь в браузере."
 	/>
-	<meta property="og:url" content="https://ixniyevonn.github.io/practice4/" />
+	<meta property="og:url" content="https://ixniyevonn.github.io/web-practice-4/" />
 	<meta name="twitter:card" content="summary" />
-	<link rel="canonical" href="https://ixniyevonn.github.io/practice4/" />
+	<link rel="canonical" href="https://ixniyevonn.github.io/web-practice-4/" />
 </svelte:head>
 
 {@render children()}

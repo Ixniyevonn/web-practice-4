@@ -89,7 +89,7 @@
 ## Запуск
 
 ```bash
-cd practice4
+cd web-practice-4
 npm install
 npm run dev
 ```
@@ -111,7 +111,7 @@ npm run build:pages
 npm run preview:pages
 ```
 
-`BASE_PATH=/practice4` задаётся в `package.json` через `cross-env`.
+`BASE_PATH=/web-practice-4` задаётся в `package.json` через `cross-env`.
 
 ## Как проверить сценарий
 
@@ -157,7 +157,7 @@ npm run preview:pages
 ## Структура
 
 ```text
-practice4/
+web-practice-4/
 ├── src/
 │   ├── app.html                  # мета, шрифты, preload карты
 │   ├── app.css                   # токены, кнопки, поля, базовая типографика
@@ -185,10 +185,10 @@ practice4/
 
 ## Публикация на GitHub Pages
 
-1. Создайте репозиторий `practice4` на GitHub и загрузите проект в ветку `main`.
+1. Создайте репозиторий `web-practice-4` на GitHub и загрузите проект в ветку `main`.
 2. В настройках репозитория: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-3. Workflow `.github/workflows/deploy.yml` соберёт сайт с `BASE_PATH=/practice4` и опубликует папку `build`.
-4. Адрес: `https://<username>.github.io/practice4/`.
+3. Workflow `.github/workflows/deploy.yml` соберёт сайт с `BASE_PATH=/web-practice-4` и опубликует папку `build`.
+4. Адрес: `https://ixniyevonn.github.io/web-practice-4/`.
 
 Если репозиторий называется иначе, измените base path в `package.json` и `svelte.config.js`.
 

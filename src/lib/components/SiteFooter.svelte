@@ -39,8 +39,8 @@
 				{/each}
 			</ul>
 			<div class="footer-links">
-				<a href="https://github.com/Ixniyevonn/practice4" target="_blank" rel="noopener noreferrer">
-					Репозиторий practice4
+				<a href="https://github.com/Ixniyevonn/web-practice-4" target="_blank" rel="noopener noreferrer">
+					Репозиторий web-practice-4
 				</a>
 				<a href="#top">Наверх ↑</a>
 			</div>
