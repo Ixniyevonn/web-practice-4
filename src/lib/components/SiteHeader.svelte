@@ -46,9 +46,8 @@
 		position: sticky;
 		inset-block-start: 0;
 		z-index: 30;
-		background: rgba(11, 9, 7, 0.9);
+		background: rgba(11, 9, 7, 0.97);
 		border-block-end: 1px solid var(--line);
-		backdrop-filter: blur(14px);
 	}
 
 	.header-inner {

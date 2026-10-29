@@ -639,7 +639,9 @@ export class MapWebglRenderer {
 		this.updateVisibility(scene);
 		// A capped pixel ratio keeps the parchment map crisp while avoiding a
 		// quadratic fill-rate cost on HiDPI screens.
-		const ratio = Math.min(Math.max(window.devicePixelRatio || 1, 1), 1.5);
+		const baseRatio = Math.min(Math.max(window.devicePixelRatio || 1, 1), 1.5);
+		const pixelArea = view.width * view.height * baseRatio * baseRatio;
+		const ratio = pixelArea > 1_200_000 ? Math.min(baseRatio, 1.25) : baseRatio;
 		const width = Math.max(1, Math.round(view.width * ratio));
 		const height = Math.max(1, Math.round(view.height * ratio));
 		if (this.canvas.width !== width || this.canvas.height !== height) {
